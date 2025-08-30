@@ -1,1 +1,1 @@
-# cli-idle-prototype
+# cli-ticket-rpg
