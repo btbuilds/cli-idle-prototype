@@ -1,44 +1,25 @@
 from textual.app import App, ComposeResult
-from textual.containers import HorizontalGroup, VerticalScroll, Vertical
 from textual.reactive import reactive
-from textual.widget import Widget
-from textual.widgets import Footer, Header, ListView, Button, ListItem
+from textual.widgets import Footer, Header
+from panels.sidebar import Sidebar
 
 
-class Sidebar(Widget):
-    """
-    Our sidebar widget.
 
-    Add desired content to compose()
-
-    """
-    def compose(self) -> ComposeResult:
-        with Vertical():
-            yield Button("New Ticket", id="new", variant="primary")
-            yield Button("Edit Ticket", id="edit", variant="primary")
-            yield Button("Exit", id="exit", variant="error")
-    
-    
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "exit":
-            self.app.exit()
 
 
 class TicketRPGApp(App):
     """A Textual app."""
-
     BINDINGS = [("s", "toggle_sidebar", "Toggle Sidebar")]
 
     show_sidebar = reactive(False)
 
-    CSS_PATH = "style/main_menu.tcss"
+    CSS_PATH = "style/style.tcss"
 
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
         yield Sidebar()
         yield Header()
-        yield Footer()
-        
+        yield Footer()        
     
     def on_mount(self) -> None:
         """Set Title"""

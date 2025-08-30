@@ -24,7 +24,7 @@ Sidebar {
     }
 }
 
-Button {
+#sidebar Button {
     width: 100%;
     margin: 1;
 }
