@@ -21,7 +21,7 @@ class Customer:
     is_business: bool = False
 
     # Optional: quick lookup of ticket numbers tied to this customer
-    # tickets: List[int] = field(default_factory=list)
+    tickets: List[int] = field(default_factory=list)
 
 @dataclass
 class Equipment:
@@ -49,7 +49,7 @@ class Ticket:
     contact_phone: Optional[str] = None
 
     description: str = "" 
-    equipment_list: list[Equipment] = field(default_factory=list)
+    equipment_list: List[Equipment] = field(default_factory=list)
 
 @dataclass
 class TicketNote:
