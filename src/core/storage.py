@@ -26,7 +26,6 @@ def initialize_files():
         with COUNTER_FILE.open("w", encoding="utf-8") as f:
             f.write("0")
 
-
 def load_json(path: Path) -> list[dict]:
     if not path.exists():
         return []
