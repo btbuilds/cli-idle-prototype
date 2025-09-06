@@ -7,6 +7,8 @@ import uuid
 class TicketState(Enum):
     OPEN = "open"
     IN_PROGRESS = "in progress"
+    WAITING_FOR_PARTS = "waiting for parts"
+    WAITING_FOR_CUSTOMER = "waiting for customer"
     CLOSED = "closed"
 
 @dataclass
@@ -48,6 +50,9 @@ class Ticket:
 
     ticket_state: TicketState = TicketState.OPEN
 
+    date_started: Optional[datetime] = None # When work began
+    date_completed: Optional[datetime] = None # When ticket was finished
+
     ticket_type: str = "" # inhouse, onsite, remote
 
     customer_id: str = "" # points back to Customer.id
@@ -61,6 +66,7 @@ class Ticket:
 @dataclass
 class TicketNote:
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    ticket_id: str = ""
     technician: str = ""
     date_created: datetime = field(default_factory=datetime.now)
     note_type: str = "" # inhouse, onsite, remote
