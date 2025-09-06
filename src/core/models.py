@@ -27,9 +27,6 @@ class Customer:
     # True if business, False if individual
     is_business: bool = False
 
-    # Optional: quick lookup of ticket numbers tied to this customer
-    tickets: List[int] = field(default_factory=list)
-
 @dataclass
 class Equipment:
     eq_type: str = ""
