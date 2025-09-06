@@ -1,8 +1,13 @@
+from enum import Enum
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import List, Optional
 import uuid
 
+class TicketState(Enum):
+    OPEN = "open"
+    IN_PROGRESS = "in progress"
+    CLOSED = "closed"
 
 @dataclass
 class Customer:
@@ -40,6 +45,8 @@ class Ticket:
 
     date_created: datetime = field(default_factory=datetime.now)
     created_by: str = "" # username or tech name
+
+    ticket_state: TicketState = TicketState.OPEN
 
     ticket_type: str = "" # inhouse, onsite, remote
 
