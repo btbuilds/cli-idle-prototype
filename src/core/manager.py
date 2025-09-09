@@ -1,11 +1,10 @@
 from models import Ticket, Customer
 from dataclasses import asdict
 from storage import load_data, save_data
+from constants import COUNTER_FILE
 
 class TicketSystemManager:
-    def __init__(self):
-        # Initialize storage
-        
+    def __init__(self):        
         # Create individual managers
         self.customers = CustomerManager()
         self.tickets = TicketManager()
@@ -63,6 +62,17 @@ class TicketManager:
     def calculate_xp_for_completion(self, ticket):
         # Your RPG XP logic
         pass
+
+    def get_next_ticket_number():
+        with open(COUNTER_FILE, 'r') as f:
+            current_max = int(f.read().strip())
+            
+        next_number = current_max + 1
+        
+        with open(COUNTER_FILE, 'w') as f:
+            f.write(str(next_number))
+        
+        return next_number
 
 class TechnicianManager:
     def __init__(self):

@@ -28,13 +28,3 @@ def load_data(data_type: str) -> list[dict]:
 def save_data(data_type: str, data: list[dict]) -> None:
     save_json(FILE_MAP[data_type], data)
 
-def get_next_ticket_number():
-    with open(COUNTER_FILE, 'r') as f:
-        current_max = int(f.read().strip())
-        
-    next_number = current_max + 1
-    
-    with open(COUNTER_FILE, 'w') as f:
-        f.write(str(next_number))
-    
-    return next_number
