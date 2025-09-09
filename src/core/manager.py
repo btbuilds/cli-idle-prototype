@@ -1,6 +1,7 @@
-from models import Ticket, Customer
+from models import Ticket, Customer, Equipment
+from typing import Optional
 from dataclasses import asdict
-from storage import load_data, save_data
+from storage import load_data, save_data, initialize_files
 from constants import COUNTER_FILE
 
 class TicketSystemManager:
@@ -18,14 +19,12 @@ class CustomerManager:
             if customer_dict["code"] == code:
                 raise ValueError(f"Customer code {code} already exists.")
 
-        customer = Customer(
-            code=code,
-            name=name,
-            phone=phone,
-            email=email,
-            address=address,
-            is_business=is_business,
-            )
+        customer = Customer(code=code,
+                            name=name,
+                            phone=phone,
+                            email=email,
+                            address=address,
+                            is_business=is_business)
         
         customer_dicts.append(asdict(customer))
 
@@ -46,24 +45,30 @@ class CustomerManager:
                 customer_tickets.append(Ticket(**ticket_dict))
         return customer_tickets
 
-class TicketManager:
-    def __init__(self):
-        self.ticket_dicts = load_data("tickets")
-        
-    def create_ticket(self, customer_id, description, equipment_list, created_by):
-        # Handle auto-incrementing ticket numbers
-        # Create the ticket with proper relationships
-        pass
+class TicketManager:        
+    def create_ticket(self, customer_id, ticket_type, description, equipment_list, created_by, contact_name: Optional[str] = "", contact_phone: Optional[str] = ""):
+        ticket_dicts = load_data("tickets")
+        ticket_number = self.get_next_ticket_number()
+        ticket = Ticket(ticket_number=ticket_number, 
+                        created_by=created_by, 
+                        ticket_type=ticket_type,
+                        customer_id=customer_id,
+                        description=description,
+                        equipment_list=equipment_list,
+                        contact_name=contact_name,
+                        contact_phone=contact_phone)
+        ticket_dicts.append(asdict(ticket))
+        save_data("tickets", ticket_dicts)
     
     def add_time_entry(self, ticket_id, technician, hours, notes):
         # Time tracking logic
         pass
     
     def calculate_xp_for_completion(self, ticket):
-        # Your RPG XP logic
+        # RPG XP logic
         pass
 
-    def get_next_ticket_number():
+    def get_next_ticket_number(self):
         with open(COUNTER_FILE, 'r') as f:
             current_max = int(f.read().strip())
             
@@ -74,10 +79,7 @@ class TicketManager:
         
         return next_number
 
-class TechnicianManager:
-    def __init__(self):
-        self.technicians_dicts = load_data("technicians")
-    
+class TechnicianManager:    
     def login(self, username):
         # Handle technician sessions
         pass

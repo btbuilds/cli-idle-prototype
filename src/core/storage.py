@@ -1,7 +1,17 @@
 import json
 from pathlib import Path
+from enum import Enum
+from datetime import datetime
 from constants import DATA_DIR, FILE_MAP, COUNTER_FILE
 
+class EnhancedJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Enum):
+            return obj.value
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
+    
 def initialize_files():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -20,7 +30,7 @@ def load_json(path: Path) -> list[dict]:
 
 def save_json(path: Path, data: list[dict]) -> None:
     with path.open("w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+        json.dump(data, f, indent=2, cls=EnhancedJSONEncoder)
 
 def load_data(data_type: str) -> list[dict]:
     return load_json(FILE_MAP[data_type])
