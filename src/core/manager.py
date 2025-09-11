@@ -1,4 +1,4 @@
-from models import Ticket, Customer, Equipment
+from models import Ticket, Customer, TicketNote
 from typing import Optional
 from dataclasses import asdict
 from storage import load_data, save_data, initialize_files
@@ -60,9 +60,21 @@ class TicketManager:
         ticket_dicts.append(asdict(ticket))
         save_data("tickets", ticket_dicts)
     
-    def add_time_entry(self, ticket_id, technician, hours, notes):
-        # Time tracking logic
-        pass
+    def add_time_entry(self, ticket_id, ticket_number, technician, notes, hours, mileage):
+        ticket_dicts = load_data("tickets")
+        ticket_note = TicketNote(ticket_id=ticket_id,
+                                 ticket_number=ticket_number,
+                                 technician=technician,
+                                 notes=notes,
+                                 ticket_time=hours,
+                                 mileage=mileage)
+        ticket = {}
+        for ticket_dict in ticket_dicts:
+            if ticket_dict["id"] == ticket_id:
+                ticket = ticket_dict
+                break
+        ticket["notes_list"].append(asdict(ticket_note))
+        save_data("tickets", ticket_dicts)
     
     def calculate_xp_for_completion(self, ticket):
         # RPG XP logic

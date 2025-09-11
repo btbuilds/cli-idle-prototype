@@ -35,6 +35,17 @@ class Equipment:
     notes: str = ""
 
 @dataclass
+class TicketNote:
+    id: str = field(default_factory=lambda: str(uuid.uuid4()))
+    ticket_id: str = ""
+    ticket_number: int = 0
+    technician: str = ""
+    date_created: datetime = field(default_factory=datetime.now)
+    notes: str = ""
+    ticket_time: float = 0 # amount of time spent on work
+    mileage: int = 0 # for onsite mileage reimbursement
+
+@dataclass
 class Ticket:
     # Internal ID (UUID)
     id: str = field(default_factory=lambda: str(uuid.uuid4()))
@@ -59,18 +70,7 @@ class Ticket:
 
     description: str = "" 
     equipment_list: List[Equipment] = field(default_factory=list)
-
-@dataclass
-class TicketNote:
-    id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    ticket_id: str = ""
-    technician: str = ""
-    date_created: datetime = field(default_factory=datetime.now)
-    note_type: str = "" # inhouse, onsite, remote
-    notes: str = ""
-    ticket_time: float = 0 # amount of time spent on work
-    mileage: int = 0 # for onsite mileage reimbursement
-
+    notes_list: List[TicketNote] = field(default_factory=list)
 
 @dataclass
 class Technician:
