@@ -5,12 +5,12 @@ from datetime import datetime
 from constants import DATA_DIR, FILE_MAP, COUNTER_FILE
 
 class EnhancedJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, Enum):
-            return obj.value
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        return super().default(obj)
+    def default(self, o):
+        if isinstance(o, Enum):
+            return o.value
+        if isinstance(o, datetime):
+            return o.isoformat()
+        return super().default(o)
     
 def initialize_files():
     DATA_DIR.mkdir(parents=True, exist_ok=True)
