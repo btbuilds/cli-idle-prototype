@@ -32,23 +32,28 @@ class CustomerManager:
     
     def find_by_code(self, code):
         customer_dicts = load_data("customers")
+
         for customer_dict in customer_dicts:
             if customer_dict["code"] == code:
                 return Customer(**customer_dict)
+            
         return None
     
     def get_customer_tickets(self, customer_id):
         ticket_dicts = load_data("tickets")
         customer_tickets = []
+
         for ticket_dict in ticket_dicts:
             if ticket_dict["customer_id"] == customer_id:
                 customer_tickets.append(Ticket(**ticket_dict))
+
         return customer_tickets
 
 class TicketManager:        
     def create_ticket(self, customer_id, ticket_type, description, equipment_list, created_by, contact_name: Optional[str] = "", contact_phone: Optional[str] = ""):
         ticket_dicts = load_data("tickets")
         ticket_number = self.get_next_ticket_number()
+
         ticket = Ticket(ticket_number=ticket_number, 
                         created_by=created_by, 
                         ticket_type=ticket_type,
@@ -57,25 +62,33 @@ class TicketManager:
                         equipment_list=equipment_list,
                         contact_name=contact_name,
                         contact_phone=contact_phone)
+        
         ticket_dicts.append(asdict(ticket))
+
         save_data("tickets", ticket_dicts)
     
     def add_time_entry(self, ticket_id, ticket_number, technician, notes, hours, mileage):
         ticket_dicts = load_data("tickets")
+
         ticket_note = TicketNote(ticket_id=ticket_id,
                                  ticket_number=ticket_number,
                                  technician=technician,
                                  notes=notes,
                                  ticket_time=hours,
                                  mileage=mileage)
+        
         ticket = {}
+
         for ticket_dict in ticket_dicts:
             if ticket_dict["id"] == ticket_id:
                 ticket = ticket_dict
                 break
+
         if not ticket:
             raise ValueError(f"Ticket with ID {ticket_id} not found")
+        
         ticket["notes_list"].append(asdict(ticket_note))
+
         save_data("tickets", ticket_dicts)
     
     def calculate_xp_for_completion(self, ticket):
@@ -106,6 +119,7 @@ class TechnicianManager:
                 if tech_dict["email"] == email: # Match username AND email
                     raise ValueError(f"A technician with username {username} and email {email} already exists")
                 raise ValueError(f"A technician with username {username} already exists")
+            
             if tech_dict["email"] == email: # Match email but not username
                 raise ValueError(f"A technician with email {email} already exists")
         
@@ -116,7 +130,7 @@ class TechnicianManager:
         tech_dicts.append(asdict(technician))
 
         save_data("technicians", tech_dicts)
-        
+
     def login(self, username):
         # Handle technician sessions
         pass
