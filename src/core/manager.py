@@ -1,4 +1,4 @@
-from models import Ticket, Customer, TicketNote
+from models import Ticket, Customer, TicketNote, Technician
 from typing import Optional
 from dataclasses import asdict
 from storage import load_data, save_data, initialize_files
@@ -97,7 +97,26 @@ class TicketManager:
         
         return next_number
 
-class TechnicianManager:    
+class TechnicianManager:
+    def create_technician(self, name, username, email):
+        tech_dicts = load_data("technicians")
+        
+        for tech_dict in tech_dicts:
+            if tech_dict["username"] == username: # Match username
+                if tech_dict["email"] == email: # Match username AND email
+                    raise ValueError(f"A technician with username {username} and email {email} already exists")
+                raise ValueError(f"A technician with username {username} already exists")
+            if tech_dict["email"] == email: # Match email but not username
+                raise ValueError(f"A technician with email {email} already exists")
+        
+        technician = Technician(name=name,
+                                username=username,
+                                email=email)
+        
+        tech_dicts.append(asdict(technician))
+
+        save_data("technicians", tech_dicts)
+        
     def login(self, username):
         # Handle technician sessions
         pass
