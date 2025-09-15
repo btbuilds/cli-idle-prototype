@@ -73,6 +73,8 @@ class TicketManager:
             if ticket_dict["id"] == ticket_id:
                 ticket = ticket_dict
                 break
+        if not ticket:
+            raise ValueError(f"Ticket with ID {ticket_id} not found")
         ticket["notes_list"].append(asdict(ticket_note))
         save_data("tickets", ticket_dicts)
     
@@ -81,9 +83,13 @@ class TicketManager:
         pass
 
     def get_next_ticket_number(self):
-        with open(COUNTER_FILE, 'r') as f:
-            current_max = int(f.read().strip())
-            
+        try:
+            with open(COUNTER_FILE, 'r') as f:
+                current_max = int(f.read().strip())
+        except (FileNotFoundError, ValueError):
+            # Fallback or initialize to 0
+            current_max = 0
+        
         next_number = current_max + 1
         
         with open(COUNTER_FILE, 'w') as f:
