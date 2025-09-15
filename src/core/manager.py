@@ -12,7 +12,13 @@ class TicketSystemManager:
         self.technicians = TechnicianManager()
 
 class CustomerManager:    
-    def create_customer(self, code, name, phone, email, address, is_business):
+    def create_customer(self, 
+                        code: str, 
+                        name: str, 
+                        phone: str, 
+                        email: str, 
+                        address: str, 
+                        is_business: bool):
         customer_dicts = load_data("customers")
 
         for customer_dict in customer_dicts:
@@ -39,7 +45,7 @@ class CustomerManager:
             
         return None
     
-    def get_customer_tickets(self, customer_id):
+    def get_customer_tickets(self, customer_id: str):
         ticket_dicts = load_data("tickets")
         customer_tickets = []
 
@@ -50,7 +56,14 @@ class CustomerManager:
         return customer_tickets
 
 class TicketManager:        
-    def create_ticket(self, customer_id, ticket_type, description, equipment_list, created_by, contact_name: Optional[str] = "", contact_phone: Optional[str] = ""):
+    def create_ticket(self, 
+                      customer_id: str, 
+                      ticket_type: str, 
+                      description: str, 
+                      equipment_list: list, 
+                      created_by: str, 
+                      contact_name: Optional[str] = "", 
+                      contact_phone: Optional[str] = ""):
         ticket_dicts = load_data("tickets")
         ticket_number = self.get_next_ticket_number()
 
@@ -67,7 +80,13 @@ class TicketManager:
 
         save_data("tickets", ticket_dicts)
     
-    def add_time_entry(self, ticket_id, ticket_number, technician, notes, hours, mileage):
+    def add_time_entry(self, 
+                       ticket_id: str, 
+                       ticket_number: int, 
+                       technician: str, 
+                       notes: str, 
+                       hours: float, 
+                       mileage: int):
         ticket_dicts = load_data("tickets")
 
         ticket_note = TicketNote(ticket_id=ticket_id,
@@ -111,7 +130,10 @@ class TicketManager:
         return next_number
 
 class TechnicianManager:
-    def create_technician(self, name, username, email):
+    def create_technician(self, 
+                          name: str, 
+                          username: str, 
+                          email: str):
         tech_dicts = load_data("technicians")
         
         for tech_dict in tech_dicts:
@@ -130,6 +152,19 @@ class TechnicianManager:
         tech_dicts.append(asdict(technician))
 
         save_data("technicians", tech_dicts)
+    
+    def set_status(self, id: str, status: bool):
+        tech_dicts = load_data("technicians")
+        
+        for tech_dict in tech_dicts:
+            if tech_dict["id"] == id:
+                tech_dict["is_active"] = status
+                save_data("technicians", tech_dicts)
+            return  # Exit early after successful update
+    
+        # If we get here, the ID wasn't found
+        # Should not be possible, just here in case
+        raise ValueError(f"Technician with ID {id} not found")
 
     def login(self, username):
         # Handle technician sessions

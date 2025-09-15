@@ -33,4 +33,20 @@ He will pick up in the morning without doing the upgrade""",
                                     hours=0.25,
                                     mileage=0)
 
-main()
+def test_create_technician():
+    manager = TicketSystemManager()
+    manager.technicians.create_technician(name="Jane Doe",
+                                          username="janedoe",
+                                          email="janedoe@example.com")
+
+def test_set_tech_inactive():
+    manager = TicketSystemManager()
+    manager.technicians.set_status("62e4436b-15e7-483c-9954-37b0883ddd0e", False)
+
+def test_set_tech_active():
+    manager = TicketSystemManager()
+    manager.technicians.set_status("7ac22040-0678-45f1-8bb6-462cf7ccbde1", True)
+
+test_create_technician()
+test_set_tech_inactive()
+test_set_tech_active()
