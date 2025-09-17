@@ -160,7 +160,21 @@ class TechnicianManager:
             if tech_dict["id"] == id:
                 tech_dict["is_active"] = status
                 save_data("technicians", tech_dicts)
-            return  # Exit early after successful update
+                return  # Exit early after successful update
+    
+        # If we get here, the ID wasn't found
+        # Should not be possible, just here in case
+        raise ValueError(f"Technician with ID {id} not found")
+    
+    def update_technician(self, id: str, name: str, username: str, email: str):
+        tech_dicts = load_data("technicians")
+        for tech_dict in tech_dicts:
+            if tech_dict["id"] == id:
+                tech_dict["name"] = name
+                tech_dict["username"] = username
+                tech_dict["email"] = email
+                save_data("technicians", tech_dicts)
+                return  # Exit early after successful update
     
         # If we get here, the ID wasn't found
         # Should not be possible, just here in case
