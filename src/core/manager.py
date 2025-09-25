@@ -1,7 +1,7 @@
 from models import Ticket, Customer, TicketNote, Technician
 from typing import Optional
 from dataclasses import asdict
-from storage import load_data, save_data, initialize_files
+from storage import load_data, save_data
 from constants import COUNTER_FILE
 
 class TicketSystemManager:
@@ -168,6 +168,7 @@ class TechnicianManager:
     
     def update_technician(self, id: str, name: str, username: str, email: str):
         tech_dicts = load_data("technicians")
+        
         for tech_dict in tech_dicts:
             if tech_dict["id"] == id:
                 tech_dict["name"] = name
