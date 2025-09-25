@@ -1,7 +1,11 @@
+Screen {    
+    layers: sidebar footer;
+}
+
 Sidebar {
     width: 30;
     /* Needs to go in its own layer to sit above content */
-    layer: sidebar; 
+    layer: sidebar;
     /* Dock the sidebar to the appropriate side */
     dock: left;
     /* Offset x to be -100% to move it out of view by default */
@@ -27,4 +31,8 @@ Sidebar {
 #sidebar Button {
     width: 100%;
     margin: 1;
+}
+
+Footer {
+    layer: footer;
 }
