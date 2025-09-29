@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from enum import Enum
 from datetime import datetime
-from constants import DATA_DIR, FILE_MAP, COUNTER_FILE
+from core.constants import DATA_DIR, FILE_MAP, COUNTER_FILE
 
 class EnhancedJSONEncoder(json.JSONEncoder):
     def default(self, o):

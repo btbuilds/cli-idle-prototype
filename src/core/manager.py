@@ -1,8 +1,8 @@
-from models import Ticket, Customer, TicketNote, Technician
+from core.models import Ticket, Customer, TicketNote, Technician
 from typing import Optional
 from dataclasses import asdict
-from storage import load_data, save_data
-from constants import COUNTER_FILE
+from core.storage import load_data, save_data
+from core.constants import COUNTER_FILE
 
 class TicketSystemManager:
     def __init__(self):        
@@ -163,7 +163,7 @@ class TechnicianManager:
                 return  # Exit early after successful update
     
         # If we get here, the ID wasn't found
-        # Should not be possible, just here in case
+        # Should not be possible with proper UI, just here in case
         raise ValueError(f"Technician with ID {id} not found")
     
     def update_technician(self, id: str, name: str, username: str, email: str):
@@ -178,12 +178,16 @@ class TechnicianManager:
                 return  # Exit early after successful update
     
         # If we get here, the ID wasn't found
-        # Should not be possible, just here in case
+        # Should not be possible with proper UI, just here in case
         raise ValueError(f"Technician with ID {id} not found")
 
     def login(self, username):
         # Handle technician sessions
-        pass
+        tech_dicts = load_data("technicians")
+        for tech_dict in tech_dicts:
+            if tech_dict["username"] == username:
+                return Technician(**tech_dict) # Convert the dict to a Technician object
+
     
     def award_xp(self, tech_id, xp_amount):
         # Update XP and handle leveling up

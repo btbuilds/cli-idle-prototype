@@ -1,5 +1,6 @@
+from textual import on
 from textual.app import ComposeResult
-from textual.widgets import Input, Button
+from textual.widgets import Input, Button, Label
 from textual.containers import Vertical
 from panels.base_screen import BaseScreen
 
@@ -9,5 +10,22 @@ class LoginScreen(BaseScreen):
     def compose(self) -> ComposeResult:
         yield from super().compose() # This gets header/sidebar/footer
         with Vertical(id="login-content"):
-            yield Input(placeholder="Username")
-            yield Button("Login")
+            yield Label("Login")
+            yield Label(id="status-label")
+            yield Input(placeholder="Username", id="username-input")
+            yield Button("Login", id="login", variant="primary")
+    
+    @on(Button.Pressed, "#login")
+    def handle_login(self):
+        username = self.query_one("#username-input", Input).value
+        tech = self.app.manager.technicians.login(username)
+        
+        if tech and tech.is_active:
+            self.app.login_user(tech)  # Pass the Technician object
+            self.query_one("#status-label", Label).update(
+                "[bold green]Login successful!"
+            )
+        else:
+            self.query_one("#status-label", Label).update(
+                "[bold red]Username does not exist!"
+            )

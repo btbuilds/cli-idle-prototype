@@ -1,10 +1,21 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from textual.screen import Screen
 from textual.app import ComposeResult
 from textual.reactive import reactive
 from textual.widgets import Header, Footer
 from panels.sidebar import Sidebar
 
+if TYPE_CHECKING:
+    from main import TicketRPGApp
+
 class BaseScreen(Screen):
+    @property
+    def app(self) -> "TicketRPGApp":
+        """Get the app instance with proper typing"""
+        return super().app  # type: ignore
+    
     show_sidebar = reactive(False)
     BINDINGS = [("s", "toggle_sidebar", "Toggle Sidebar")]
     
