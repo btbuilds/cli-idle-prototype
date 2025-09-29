@@ -16,6 +16,7 @@ class LoginScreen(BaseScreen):
             yield Button("Login", id="login", variant="primary")
     
     @on(Button.Pressed, "#login")
+    @on(Input.Submitted, "#username-input")
     def handle_login(self):
         username = self.query_one("#username-input", Input).value
         tech = self.app.manager.technicians.login(username)
@@ -24,6 +25,10 @@ class LoginScreen(BaseScreen):
             self.app.login_user(tech)  # Pass the Technician object
             self.query_one("#status-label", Label).update(
                 "[bold green]Login successful!"
+            )
+        elif tech and not tech.is_active:
+            self.query_one("#status-label", Label).update(
+                "[bold red]Username is not active!"
             )
         else:
             self.query_one("#status-label", Label).update(
