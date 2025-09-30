@@ -1,7 +1,7 @@
 from textual import on
 from textual.app import ComposeResult
 from textual.widgets import Input, Button, Label
-from textual.containers import Vertical, Grid
+from textual.containers import Vertical
 from textual.screen import ModalScreen
 from panels.base_screen import BaseScreen
 
