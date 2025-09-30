@@ -16,10 +16,11 @@ class TicketRPGApp(App):
     
     def login_user(self, technician):
         self.current_technician = technician
-        self.sub_title += f" Current User: {technician.username}"
+        self.sub_title = f"Earn XP while working! Current User: {technician.username}"
     
     def logout_user(self):
         self.current_technician = None
+        self.sub_title = "Earn XP while working!"
 
 if __name__ == "__main__":
     app = TicketRPGApp()
