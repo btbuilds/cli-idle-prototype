@@ -10,7 +10,7 @@ Screen {
     max-width: 120;
     height: auto;
     background: $panel;
-    border: heavy $primary;
+    border: round $primary;
     padding: 2 4;
     margin: 2;
 }
@@ -47,7 +47,7 @@ Sidebar {
     width: 60;
     height: auto;
     background: $panel;
-    border: heavy $primary;
+    border: round $primary;
     padding-top: 1;
     padding-bottom: 2;
     padding-left: 4;
@@ -69,6 +69,30 @@ Sidebar {
     width: 100%;
     margin: 1 0;
 }
+
+SuccessPopup {
+    align: center middle;
+    background: $background 60%;
+}
+
+#successpopup {
+    width: 40;
+    height: 15;
+    border: round $success;
+    background: $surface;
+    padding: 2 4;
+}
+
+#successpopup Label {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 2;
+}
+
+#successpopup Button {
+    width: 100%;
+}
+
 
 /* Error message styling */
 .error-message {
