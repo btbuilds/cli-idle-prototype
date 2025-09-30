@@ -76,9 +76,9 @@ SuccessPopup {
 
 #successpopup {
     width: 40;
-    height: 15;
+    height: auto;
     border: round $success;
-    background: $surface;
+    background: $surface;    
     padding: 2 4;
 }
 
