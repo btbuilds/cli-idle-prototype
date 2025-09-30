@@ -1,30 +1,38 @@
 Screen {    
     layers: sidebar footer;
+    align: center middle;
+    background: $surface;
 }
 
-Sidebar {
-    width: 30;
-    /* Needs to go in its own layer to sit above content */
-    layer: sidebar;
-    /* Dock the sidebar to the appropriate side */
-    dock: left;
-    /* Offset x to be -100% to move it out of view by default */
-    offset-x: -100%;
+/* Main content container styling */
+#main-content {
+    width: 80%;
+    max-width: 120;
+    height: auto;
+    background: $panel;
+    border: heavy $primary;
+    padding: 2 4;
+    margin: 2;
+}
 
+/* Sidebar styling */
+Sidebar {
+    width: 25;
+    layer: sidebar;
+    dock: left;
+    offset-x: -100%;
     background: $surface;
     border-right: vkey $background;    
-
-    /* Enable animation */
     transition: offset 200ms;
-    
+   
     &.-visible {
-        /* Set offset.x to 0 to make it visible when class is applied */
         offset-x: 0;
     }
-
+    
     & > Vertical {
         margin: 1;
         width: 100%;
+        height: 100%;
     }
 }
 
@@ -33,6 +41,152 @@ Sidebar {
     margin: 1;
 }
 
+/* Login screen styling */
+#login-content {
+    align: center middle;
+    width: 60;
+    height: auto;
+    background: $panel;
+    border: heavy $primary;
+    padding: 2 4;
+}
+
+#login-content Input {
+    width: 100%;
+    margin: 1 0;
+}
+
+#login-content Button {
+    width: 100%;
+    margin-top: 2;
+}
+
+#login-content Static {
+    text-align: center;
+    width: 100%;
+    margin: 1 0;
+}
+
+/* Error message styling */
+.error-message {
+    color: $error;
+    text-style: bold;
+    margin: 1 0;
+}
+
+.success-message {
+    color: $success;
+    text-style: bold;
+    margin: 1 0;
+}
+
+/* Form styling */
+.form-container {
+    align: center middle;
+    width: 80%;
+    max-width: 100;
+    background: $panel;
+    border: round $primary;
+    padding: 2 4;
+}
+
+.form-label {
+    text-style: bold;
+    margin: 1 0 0 0;
+    color: $text;
+}
+
+.form-input {
+    width: 100%;
+    margin: 0 0 1 0;
+}
+
+/* Button variants */
+Button.primary {
+    background: $primary;
+    color: $text;
+}
+
+Button.success {
+    background: $success;
+    color: $text;
+}
+
+Button.error {
+    background: $error;
+    color: $text;
+}
+
+/* Header customization */
+Header {
+    background: $primary-darken-2;
+}
+
+/* Footer */
 Footer {
     layer: footer;
+    background: $surface-darken-1;
+}
+
+/* Card-like containers */
+.card {
+    background: $panel;
+    border: round $primary;
+    padding: 2;
+    margin: 1;
+    width: auto;
+    height: auto;
+}
+
+.card-title {
+    text-style: bold;
+    text-align: center;
+    color: $primary;
+    margin-bottom: 1;
+}
+
+/* Ticket display styling */
+.ticket-item {
+    background: $surface;
+    border: solid $primary;
+    padding: 1 2;
+    margin: 1 0;
+}
+
+.ticket-number {
+    text-style: bold;
+    color: $accent;
+}
+
+/* Status indicators */
+.status-open {
+    color: $warning;
+    text-style: bold;
+}
+
+.status-in-progress {
+    color: $accent;
+    text-style: bold;
+}
+
+.status-closed {
+    color: $success;
+    text-style: bold;
+}
+
+/* XP and level display */
+.xp-display {
+    background: $primary-darken-1;
+    border: round $accent;
+    padding: 1 2;
+    text-align: center;
+    margin: 1 0;
+}
+
+.level-badge {
+    background: $accent;
+    color: $text;
+    text-style: bold;
+    padding: 0 1;
+    border: round $primary;
 }
