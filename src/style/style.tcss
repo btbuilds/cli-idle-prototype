@@ -1,4 +1,4 @@
-Screen {    
+BaseScreen {    
     layers: sidebar footer;
     align: center middle;
     background: $surface;
@@ -72,7 +72,6 @@ Sidebar {
 
 SuccessPopup {
     align: center middle;
-    background: $background 60%;
 }
 
 #successpopup {
