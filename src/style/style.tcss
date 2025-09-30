@@ -48,7 +48,10 @@ Sidebar {
     height: auto;
     background: $panel;
     border: heavy $primary;
-    padding: 2 4;
+    padding-top: 1;
+    padding-bottom: 2;
+    padding-left: 4;
+    padding-right: 4;
 }
 
 #login-content Input {
