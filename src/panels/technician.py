@@ -3,7 +3,7 @@ from textual.app import ComposeResult
 from textual.widgets import Input, Button, Label, Rule
 from textual.containers import Vertical
 from panels.base_screen import BaseScreen
-from panels.popup import PopupScreen
+from panels.popup import PopupScreen, PopupType
 
 class TechnicianScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
@@ -56,8 +56,11 @@ class NewTechnicianScreen(BaseScreen):
         name = self.query_one("#name-input", Input).value
         username = self.query_one("#username-input", Input).value
         email = self.query_one("#email-input", Input).value
-        self.app.manager.technicians.create_technician(name, username, email)
-        self.app.push_screen(PopupScreen(f"Technician {name} created!"))
+        try:
+            self.app.manager.technicians.create_technician(name, username, email)
+            self.app.push_screen(PopupScreen(f"Technician {name} created!", PopupType.SUCCESS))
+        except Exception as e:
+            self.app.push_screen(PopupScreen(f"Error: {e}", PopupType.ERROR))
         
 
     @on(Button.Pressed, "#cancel")

@@ -3,7 +3,7 @@ from textual.app import ComposeResult
 from textual.widgets import Input, Button, Label
 from textual.containers import Vertical
 from panels.base_screen import BaseScreen
-from panels.popup import PopupScreen
+from panels.popup import PopupScreen, PopupType
 
 class LoginScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
@@ -12,7 +12,6 @@ class LoginScreen(BaseScreen):
         yield from super().compose() # This gets header/sidebar/footer
         with Vertical(id="login-content"):
             yield Label("Login")
-            yield Label(id="status-label")
             yield Input(placeholder="Username", id="username-input")
             yield Button("Login", id="login", variant="primary")
     
@@ -24,12 +23,8 @@ class LoginScreen(BaseScreen):
         
         if tech and tech.is_active:
             self.app.login_user(tech)  # Pass the Technician object
-            self.app.push_screen(PopupScreen("Login successful!"))
-        elif tech and not tech.is_active:
-            self.query_one("#status-label", Label).update(
-                "[bold red]Username is not active!"
-            )
+            self.app.push_screen(PopupScreen("Login successful!", PopupType.SUCCESS))
+        elif tech and not tech.is_active: 
+            self.app.push_screen(PopupScreen("Error: Username is not active!", PopupType.ERROR))
         else:
-            self.query_one("#status-label", Label).update(
-                "[bold red]Username does not exist!"
-            )
+            self.app.push_screen(PopupScreen("Error: Username does not exist!", PopupType.ERROR))
