@@ -16,7 +16,8 @@ class PopupScreen(ModalScreen):
         self.type = type
 
     def compose(self) -> ComposeResult:
-        with Vertical(id="popup"):
+        popup_classes = "popup-error" if self.type == PopupType.ERROR else "popup-success"
+        with Vertical(id="popup", classes=popup_classes):
             yield Label(content=self.message)
             yield Button("Close", id="close", variant="success")
     
