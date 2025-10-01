@@ -9,6 +9,7 @@ class Sidebar(Widget):
         with Vertical(id="sidebar"):
             yield Button("New Ticket", id="new", variant="primary")
             yield Button("Edit Ticket", id="edit", variant="primary")
+            yield Button("Technicians", id="technicians", variant="primary")
             yield Button("Account", id="account", variant="success")
             yield Button("Exit", id="exit", variant="error")
     
@@ -18,6 +19,13 @@ class Sidebar(Widget):
         # Comment on next line ignores pylance/vscode error since the code works
         self.screen.show_sidebar = False  # type: ignore[attr-defined]
         self.app.push_screen(AccountScreen())
+    
+    @on(Button.Pressed, "#technicians")
+    def push_technicians(self) -> None:
+        from panels.technician import TechnicianScreen # Import here to avoid circular import issue.
+        # Comment on next line ignores pylance/vscode error since the code works
+        self.screen.show_sidebar = False  # type: ignore[attr-defined]
+        self.app.push_screen(TechnicianScreen())
     
     @on(Button.Pressed, "#exit")
     def quit_button(self) -> None:
