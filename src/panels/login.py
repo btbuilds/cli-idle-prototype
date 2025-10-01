@@ -2,8 +2,8 @@ from textual import on
 from textual.app import ComposeResult
 from textual.widgets import Input, Button, Label
 from textual.containers import Vertical
-from textual.screen import ModalScreen
 from panels.base_screen import BaseScreen
+from panels.popup import PopupScreen
 
 class LoginScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
@@ -24,7 +24,7 @@ class LoginScreen(BaseScreen):
         
         if tech and tech.is_active:
             self.app.login_user(tech)  # Pass the Technician object
-            self.app.push_screen(SuccessPopup())
+            self.app.push_screen(PopupScreen("Login successful!"))
         elif tech and not tech.is_active:
             self.query_one("#status-label", Label).update(
                 "[bold red]Username is not active!"
@@ -33,14 +33,3 @@ class LoginScreen(BaseScreen):
             self.query_one("#status-label", Label).update(
                 "[bold red]Username does not exist!"
             )
-
-class SuccessPopup(ModalScreen):
-    def compose(self) -> ComposeResult:
-        with Vertical(id="successpopup"):
-            yield Label("Login successful!")
-            yield Button("Close", id="close", variant="success")
-    
-    @on(Button.Pressed, "#close")
-    def close_screen(self):
-        self.app.pop_screen()
-        self.app.pop_screen()

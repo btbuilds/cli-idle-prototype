@@ -70,11 +70,11 @@ Sidebar {
     margin: 1 0;
 }
 
-SuccessPopup {
+PopupScreen {
     align: center middle;
 }
 
-#successpopup {
+#popup {
     width: 40;
     height: auto;
     border: round $success;
@@ -82,13 +82,13 @@ SuccessPopup {
     padding: 2 4;
 }
 
-#successpopup Label {
+#popup Label {
     text-align: center;
     width: 100%;
     margin-bottom: 2;
 }
 
-#successpopup Button {
+#popup Button {
     width: 100%;
 }
 
@@ -152,6 +152,10 @@ Header {
 Footer {
     layer: footer;
     background: $surface-darken-1;
+}
+
+Rule {
+    color: $primary;
 }
 
 /* Card-like containers */
