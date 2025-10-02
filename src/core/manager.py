@@ -166,7 +166,7 @@ class TechnicianManager:
         # Should not be possible with proper UI, just here in case
         raise ValueError(f"Technician with ID {id} not found")
     
-    def update_technician(self, id: str, name: str, username: str, email: str):
+    def update_technician(self, id: str, name: str, username: str, email: str, is_active: bool):
         tech_dicts = load_data("technicians")
         
         for tech_dict in tech_dicts:
@@ -174,6 +174,7 @@ class TechnicianManager:
                 tech_dict["name"] = name
                 tech_dict["username"] = username
                 tech_dict["email"] = email
+                tech_dict["is_active"] = is_active
                 save_data("technicians", tech_dicts)
                 return  # Exit early after successful update
     
@@ -188,6 +189,18 @@ class TechnicianManager:
             if tech_dict["username"] == username:
                 return Technician(**tech_dict) # Convert the dict to a Technician object
 
+    def list_technicians(self):
+        tech_dicts = load_data("technicians")
+        tech_objects = []
+        for tech_dict in tech_dicts:
+            tech_objects.append(Technician(**tech_dict))
+        return tech_objects
+    
+    def find_by_id(self, id: str):
+        tech_dicts = load_data("technicians")
+        for tech_dict in tech_dicts:
+            if tech_dict["id"] == id:
+                return Technician(**tech_dict)
     
     def award_xp(self, tech_id, xp_amount):
         # Update XP and handle leveling up

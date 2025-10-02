@@ -100,6 +100,75 @@ PopupScreen {
     width: 100%;
 }
 
+/* Edit Technician Screen */
+#edit-tech-content {
+    width: 90%;
+    max-width: 140;
+    height: auto;
+    background: $panel;
+    border: round $primary;
+    padding: 2;
+    margin: 2;
+}
+
+#tech-list-container {
+    width: 40%;
+    height: auto;
+    border-right: solid $primary;
+    padding: 1 2;
+}
+
+#tech-list-container > Label {
+    text-style: bold;
+    color: $primary;
+    margin-bottom: 1;
+}
+
+#tech-list {
+    border: round $surface;
+}
+
+#tech-edit-form {
+    width: 60%;
+    height: auto;
+    padding: 1 2;
+}
+
+#tech-edit-form > Label {
+    text-style: bold;
+    margin-top: 1;
+    margin-bottom: 0;
+    color: $text;
+}
+
+#tech-edit-form > Input {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+#tech-edit-form > Button {
+    width: 100%;
+    margin-top: 2;
+}
+
+/* ListView styling */
+ListView {
+    background: $surface;
+}
+
+ListView > ListItem {
+    padding: 1;
+}
+
+ListView > ListItem:hover {
+    background: $primary-darken-1;
+}
+
+ListView > ListItem.-selected {
+    background: $primary;
+    text-style: bold;
+}
+
 
 /* Error message styling */
 .error-message {
