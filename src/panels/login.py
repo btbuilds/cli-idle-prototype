@@ -10,7 +10,7 @@ class LoginScreen(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield from super().compose() # This gets header/sidebar/footer
-        with Vertical(id="login-content"):
+        with Vertical(id="form-content"):
             yield Label("Login")
             yield Input(placeholder="Username", id="username-input")
             yield Button("Login", id="login", variant="primary")

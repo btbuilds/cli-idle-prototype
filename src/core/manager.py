@@ -3,6 +3,8 @@ from typing import Optional
 from dataclasses import asdict
 from core.storage import load_data, save_data
 from core.constants import COUNTER_FILE
+from enum import Enum
+import re
 
 class TicketSystemManager:
     def __init__(self):        
@@ -10,6 +12,12 @@ class TicketSystemManager:
         self.customers = CustomerManager()
         self.tickets = TicketManager()
         self.technicians = TechnicianManager()
+
+class SearchType(Enum):
+    CODE = "code"
+    NAME = "name"
+    PHONE = "phone"
+    EMAIL = "email"
 
 class CustomerManager:    
     def create_customer(self, 
@@ -24,10 +32,12 @@ class CustomerManager:
         for customer_dict in customer_dicts:
             if customer_dict["code"] == code:
                 raise ValueError(f"Customer code {code} already exists.")
+            
+        cleaned_phone = re.sub(r'\D', '', phone) # Strips everything but digits
 
         customer = Customer(code=code,
                             name=name,
-                            phone=phone,
+                            phone=cleaned_phone,
                             email=email,
                             address=address,
                             is_business=is_business)
@@ -36,14 +46,56 @@ class CustomerManager:
 
         save_data("customers", customer_dicts)
     
-    def find_by_code(self, code):
+    def update_customer(self,
+                        id: str, 
+                        code: str, 
+                        name: str, 
+                        phone: str, 
+                        email: str, 
+                        address: str, 
+                        is_business: bool):
         customer_dicts = load_data("customers")
 
         for customer_dict in customer_dicts:
-            if customer_dict["code"] == code:
+            if customer_dict["id"] == id:
+                cleaned_phone = re.sub(r'\D', '', phone) # Strips everything but digits
+                customer_dict["code"] = code
+                customer_dict["name"] = name
+                customer_dict["phone"] = cleaned_phone
+                customer_dict["email"] = email
+                customer_dict["address"] = address
+                customer_dict["is_business"] = is_business
+                save_data("customers", customer_dicts)
+                return  # Exit early after successful update
+    
+        # If we get here, the ID wasn't found
+        # Should not be possible with proper UI, just here in case
+        raise ValueError(f"Customer with ID {id} not found")
+
+    
+    def search_customers(self, query_data, search_type: SearchType):
+        customer_dicts = load_data("customers")
+        results = []
+        field_name = search_type.value
+
+        for customer_dict in customer_dicts:
+            field_value = customer_dict[field_name]
+
+            if search_type == SearchType.PHONE:
+                cleaned_query = re.sub(r'\D', '', query_data) # Strips everything but digits
+                if field_value == cleaned_query:
+                    results.append(Customer(**customer_dict))
+            else:
+                if query_data.lower() in field_value.lower():
+                    results.append(Customer(**customer_dict))
+        
+        return results
+    
+    def find_by_id(self, id: str):
+        customer_dicts = load_data("customers")
+        for customer_dict in customer_dicts:
+            if customer_dict["id"] == id:
                 return Customer(**customer_dict)
-            
-        return None
     
     def get_customer_tickets(self, customer_id: str):
         ticket_dicts = load_data("tickets")

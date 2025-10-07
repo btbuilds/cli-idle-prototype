@@ -9,7 +9,7 @@ class AccountScreen(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield from super().compose() # This gets header/sidebar/footer
-        with Vertical(id="login-content"):
+        with Vertical(id="form-content"):
             yield Button("Login", id="login", variant="primary")
             yield Button("Logout", id="logout", variant="primary", disabled=True)
         

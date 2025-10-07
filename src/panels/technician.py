@@ -10,7 +10,7 @@ class TechnicianScreen(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield from super().compose() # This gets header/sidebar/footer
-        with Vertical(id="login-content"):
+        with Vertical(id="form-content"):
             yield Label("Technicians")
             yield Button("New Technician", id="new", variant="primary")
             yield Button("Edit Technician", id="edit", variant="primary")
@@ -30,7 +30,7 @@ class NewTechnicianScreen(BaseScreen):
 
     def compose(self) -> ComposeResult:
         yield from super().compose()
-        with Vertical(id="login-content"):
+        with Vertical(id="form-content"):
             yield Label("Create Technician")
             yield Rule(line_style="heavy")
             yield Label("Name")
