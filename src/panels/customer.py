@@ -121,6 +121,7 @@ class EditCustomerScreen(BaseScreen):
     
     def on_mount(self) -> None:
         self.current_customer_id = None
+        self.query_one("#edit-form-section", Vertical).disabled = True
     
     def search_customers(self):
         """Search for customers that match query and load matches in to list"""
@@ -158,6 +159,7 @@ class EditCustomerScreen(BaseScreen):
     
     @on(ListView.Selected, "#customer-results")
     def select_customer(self, event: ListView.Selected) -> None:
+        self.query_one("#edit-form-section", Vertical).disabled = False
         selected_item = event.item
         customer_id = selected_item.customer_id # type: ignore[attr-defined]
 
