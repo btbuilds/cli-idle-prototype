@@ -29,9 +29,7 @@ class CustomerManager:
                         is_business: bool):
         customer_dicts = load_data("customers")
 
-        for customer_dict in customer_dicts:
-            if customer_dict["code"] == code:
-                raise ValueError(f"Customer code {code} already exists.")
+        self.check_unique_code(code)
             
         cleaned_phone = re.sub(r'\D', '', phone) # Strips everything but digits
 
@@ -56,8 +54,12 @@ class CustomerManager:
                         is_business: bool):
         customer_dicts = load_data("customers")
 
+        if not code or not name or not phone:
+            raise ValueError("Customer Code, Name, and Phone are required.")
+
         for customer_dict in customer_dicts:
             if customer_dict["id"] == id:
+                self.check_unique_code(code, id)
                 cleaned_phone = re.sub(r'\D', '', phone) # Strips everything but digits
                 customer_dict["code"] = code
                 customer_dict["name"] = name
@@ -71,7 +73,13 @@ class CustomerManager:
         # If we get here, the ID wasn't found
         # Should not be possible with proper UI, just here in case
         raise ValueError(f"Customer with ID {id} not found")
+    
+    def check_unique_code(self, code, id: Optional[str] = ""):
+        customer_dicts = load_data("customers")
 
+        for customer_dict in customer_dicts:
+            if customer_dict["code"] == code and customer_dict["id"] != id:
+                raise ValueError(f"Customer code {code} already exists.")
     
     def search_customers(self, query_data, search_type: SearchType):
         customer_dicts = load_data("customers")
