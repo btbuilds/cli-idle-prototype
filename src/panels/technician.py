@@ -7,6 +7,7 @@ from panels.popup import PopupScreen, PopupType
 
 class TechnicianScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
+    CSS_PATH = "../style/technician.tcss"
 
     def compose(self) -> ComposeResult:
         yield from super().compose() # This gets header/sidebar/footer
@@ -27,6 +28,7 @@ class TechnicianScreen(BaseScreen):
 
 class NewTechnicianScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
+    CSS_PATH = "../style/newtech.tcss"
 
     def compose(self) -> ComposeResult:
         yield from super().compose()
@@ -69,6 +71,7 @@ class NewTechnicianScreen(BaseScreen):
 
 class EditTechnicianScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
+    CSS_PATH = "../style/edittech.tcss"
 
     def compose(self) -> ComposeResult:
         yield from super().compose()

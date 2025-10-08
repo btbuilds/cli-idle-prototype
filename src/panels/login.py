@@ -7,6 +7,7 @@ from panels.popup import PopupScreen, PopupType
 
 class LoginScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
+    CSS_PATH = "../style/account.tcss"
 
     def compose(self) -> ComposeResult:
         yield from super().compose() # This gets header/sidebar/footer

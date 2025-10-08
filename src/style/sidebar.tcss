@@ -1,0 +1,25 @@
+/* Sidebar styling */
+Sidebar {
+    width: 25;
+    layer: sidebar;
+    dock: left;
+    offset-x: -100%;
+    background: $surface;
+    border-right: vkey $background;    
+    transition: offset 200ms;
+   
+    &.-visible {
+        offset-x: 0;
+    }
+    
+    & > Vertical {
+        margin: 1;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+#sidebar Button {
+    width: 100%;
+    margin: 1;
+}

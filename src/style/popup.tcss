@@ -1,0 +1,29 @@
+PopupScreen {
+    align: center middle;
+}
+
+#popup {
+    width: 40;
+    height: auto;
+    border: round $success;
+    background: $surface;    
+    padding: 2 4;
+}
+
+#popup.popup-error {
+    border: round $error;
+}
+
+#popup.popup-success {
+    border: round $success;
+}
+
+#popup Label {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 2;
+}
+
+#popup Button {
+    width: 100%;
+}

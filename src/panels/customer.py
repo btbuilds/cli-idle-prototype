@@ -8,6 +8,7 @@ from core.manager import SearchType
 
 class CustomerScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
+    CSS_PATH = "../style/customer.tcss"
 
     def compose(self) -> ComposeResult:
         yield from super().compose() # This gets header/sidebar/footer
@@ -28,6 +29,7 @@ class CustomerScreen(BaseScreen):
 
 class NewCustomerScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
+    CSS_PATH = "../style/newcustomer.tcss"
 
     def compose(self) -> ComposeResult:
         yield from super().compose()
@@ -79,6 +81,7 @@ class NewCustomerScreen(BaseScreen):
 
 class EditCustomerScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
+    CSS_PATH = "../style/editcustomer.tcss"
 
     def compose(self) -> ComposeResult:
         yield from super().compose()

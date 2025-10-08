@@ -13,6 +13,13 @@ class Sidebar(Widget):
             yield Button("Account", id="account", variant="success")
             yield Button("Exit", id="exit", variant="error")
     
+    @on(Button.Pressed, "#tickets")
+    def push_tickets(self) -> None:
+        from panels.ticket import TicketScreen # Import here to avoid circular import issue.
+        # Comment on next line ignores pylance/vscode error since the code works
+        self.screen.show_sidebar = False  # type: ignore[attr-defined]
+        self.app.push_screen(TicketScreen())
+    
     @on(Button.Pressed, "#customers")
     def push_customers(self) -> None:
         from panels.customer import CustomerScreen # Import here to avoid circular import issue.

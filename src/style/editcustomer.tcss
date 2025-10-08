@@ -1,0 +1,88 @@
+/* Edit Customer Screen */
+#edit-customer-content {
+    width: 90%;
+    max-width: 140;
+    height: auto;
+    background: $panel;
+    border: round $primary;
+    padding: 2;
+    margin: 2;
+}
+
+/* Search section */
+#search-section {
+    width: 100%;
+    height: auto;
+    padding: 1;
+    margin-bottom: 2;
+    border: round $primary;
+    background: $surface;
+}
+
+#search-section Select {
+    width: 25%;
+    margin-right: 1;
+}
+
+#search-section Input {
+    width: 1fr;
+    margin-right: 1;
+}
+
+#search-section Button {
+    width: auto;
+    min-width: 15;
+}
+
+/* Results section */
+#results-section {
+    width: 100%;
+    height: auto;
+    padding: 1 2;
+    margin-bottom: 2;
+    border: round $primary;
+    background: $surface;
+}
+
+#results-section > Label {
+    text-style: bold;
+    color: $primary;
+    margin-bottom: 1;
+}
+
+#customer-results {
+    height: 20;
+    border: round $surface-darken-1;
+}
+
+/* Edit form section */
+#edit-form-section {
+    width: 100%;
+    height: auto;
+    padding: 1 2;
+    border: round $primary;
+    background: $surface;
+}
+
+#edit-form-section > Label:first-child {
+    text-style: bold;
+    color: $primary;
+    margin-bottom: 2;
+}
+
+#edit-form-section Label {
+    text-style: bold;
+    margin-top: 1;
+    margin-bottom: 0;
+    color: $text;
+}
+
+#edit-form-section Input {
+    width: 100%;
+    margin-bottom: 1;
+}
+
+#edit-form-section Button {
+    width: 100%;
+    margin-top: 2;
+}

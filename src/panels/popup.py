@@ -10,6 +10,7 @@ class PopupType(Enum):
     SUCCESS = "success"
 
 class PopupScreen(ModalScreen):
+    CSS_PATH = "../style/popup.tcss"
     def __init__(self, message: str, type: PopupType):
         super().__init__()
         self.message = message
