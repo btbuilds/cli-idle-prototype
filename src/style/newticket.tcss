@@ -22,25 +22,25 @@
 }
 
 /* Two-column layout sections */
-#new-ticket-content > Horizontal {
+.two-column {
     width: 100%;
     height: auto;
     margin-bottom: 2;
 }
 
-#new-ticket-content > Horizontal > Vertical {
+.two-column > Vertical {
     width: 50%;
     height: auto;
     padding: 0 1;
 }
 
-#new-ticket-content > Horizontal > Vertical > Label {
+.two-column > Vertical > Label {
     text-style: bold;
     color: $text;
     margin-bottom: 0;
 }
 
-#new-ticket-content > Horizontal > Vertical > Horizontal {
+.two-column > Vertical > Horizontal {
     width: 100%;
     height: auto;
 }
@@ -87,7 +87,7 @@
     padding: 1 2;
 }
 
-#new-ticket-content > #equipment-row {
+#equipment-row {
     width: 100%;
     height: auto;
     margin: 0;         /* remove bottom margin */
@@ -99,8 +99,7 @@
 /* Tighten up the child widgets in the row */
 #equipment-row > Select,
 #equipment-row > Input {
-    width: auto;
-    margin: 0 1 0 0;  /* small horizontal spacing between fields */
+    width: 25%;
     padding: 0;
 }
 

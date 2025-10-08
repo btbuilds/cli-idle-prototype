@@ -68,6 +68,8 @@ class Ticket:
     contact_name: Optional[str] = None # in case the contact is different from the customer
     contact_phone: Optional[str] = None
 
+    priority: int = 0 # Priority level 1-5
+
     description: str = "" 
     equipment_list: List[Equipment] = field(default_factory=list)
     notes_list: List[TicketNote] = field(default_factory=list)
