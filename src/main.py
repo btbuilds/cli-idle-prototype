@@ -9,18 +9,18 @@ class TicketRPGApp(App):
     manager = TicketSystemManager()
    
     def on_mount(self) -> None:
-        self.title = "Ticket RPG"
-        self.sub_title = "Earn XP while working!"
+        self.title = "Tavern"
+        self.sub_title = "Where techs earn their XP"
         self.theme = "monokai"
         self.push_screen(HomeScreen())
     
     def login_user(self, technician):
         self.current_technician = technician
-        self.sub_title = f"Earn XP while working! Current User: {technician.username}"
+        self.sub_title = f"Where techs earn their XP -- Current User: {technician.username}"
     
     def logout_user(self):
         self.current_technician = None
-        self.sub_title = "Earn XP while working!"
+        self.sub_title = "Where techs earn their XP"
 
 if __name__ == "__main__":
     app = TicketRPGApp()
