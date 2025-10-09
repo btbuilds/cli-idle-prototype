@@ -3,6 +3,7 @@ from textual.app import ComposeResult
 from textual.widgets import Input, Button, Label
 from textual.containers import Vertical
 from panels.base_screen import BaseScreen
+from panels.popup import PopupScreen, PopupType
 
 class AccountScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
@@ -29,7 +30,9 @@ class AccountScreen(BaseScreen):
     @on(Button.Pressed, "#logout")
     def logout(self):
         self.app.logout_user()
-        self.check_button_state()
+        for i in range(len(self.app.screen_stack) - 2): # Gets user back to home screen
+            self.app.pop_screen()
+        self.app.push_screen(PopupScreen("Logged out.", PopupType.ERROR))
 
     def check_button_state(self):
         if self.app.current_technician:

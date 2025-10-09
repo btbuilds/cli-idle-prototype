@@ -43,9 +43,10 @@ class Sidebar(Widget):
     
     @on(Button.Pressed, "#technicians")
     def push_technicians(self) -> None:
-        if not self.app.current_technician: # type: ignore[attr-defined]
-            self.app.push_screen(PopupScreen(f"Error: Must be logged in.", PopupType.ERROR))
-            return
+        # Once a default Admin account gets added to initialization, uncomment this
+        # if not self.app.current_technician: # type: ignore[attr-defined]
+        #     self.app.push_screen(PopupScreen(f"Error: Must be logged in.", PopupType.ERROR))
+        #     return
         from panels.technician import TechnicianScreen # Import here to avoid circular import issue.
         # Comment on next line ignores pylance/vscode error since the code works
         self.screen.show_sidebar = False  # type: ignore[attr-defined]
