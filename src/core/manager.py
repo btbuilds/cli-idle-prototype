@@ -105,6 +105,12 @@ class CustomerManager:
             if customer_dict["id"] == id:
                 return Customer(**customer_dict)
     
+    def get_customer_id(self, code: str):
+        customer_dicts = load_data("customers")
+        for customer_dict in customer_dicts:
+            if customer_dict["code"] == code:
+                return customer_dict["id"]
+    
     def get_customer_tickets(self, customer_id: str):
         ticket_dicts = load_data("tickets")
         customer_tickets = []
@@ -118,7 +124,8 @@ class CustomerManager:
 class TicketManager:        
     def create_ticket(self, 
                       customer_id: str, 
-                      ticket_type: str, 
+                      ticket_type: str,
+                      priority: str, 
                       description: str, 
                       equipment_list: list, 
                       created_by: str, 
@@ -126,19 +133,25 @@ class TicketManager:
                       contact_phone: Optional[str] = ""):
         ticket_dicts = load_data("tickets")
         ticket_number = self.get_next_ticket_number()
+        prio_int = int(priority)
+        cleaned_phone = ""
+        if contact_phone:
+            cleaned_phone = re.sub(r'\D', '', contact_phone) # Strips everything but digits
 
         ticket = Ticket(ticket_number=ticket_number, 
                         created_by=created_by, 
                         ticket_type=ticket_type,
+                        priority=prio_int,
                         customer_id=customer_id,
                         description=description,
                         equipment_list=equipment_list,
                         contact_name=contact_name,
-                        contact_phone=contact_phone)
+                        contact_phone=cleaned_phone)
         
         ticket_dicts.append(asdict(ticket))
 
         save_data("tickets", ticket_dicts)
+        return ticket_number
     
     def add_time_entry(self, 
                        ticket_id: str, 

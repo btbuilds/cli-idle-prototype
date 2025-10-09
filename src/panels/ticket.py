@@ -5,6 +5,7 @@ from textual.containers import Vertical, Horizontal
 from panels.base_screen import BaseScreen
 from panels.popup import PopupScreen, PopupType
 from core.manager import SearchType
+from core.models import Equipment
 
 class TicketScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
@@ -75,49 +76,99 @@ class NewTicketScreen(BaseScreen):
                     ("Laptop", "laptop"),
                     ("Printer", "printer"),
                     ("Other", "other")],
-                    id=f"eq-type",
+                    id="eq-type",
                     prompt="Type"
                 )
                 yield Input(placeholder="Model", id="eq-model")
                 yield Input(placeholder="Serial", id="eq-serial")
                 yield Input(placeholder="Notes", id="eq-notes")
-            yield Button("+ Add Equipment", id="add-equipment", variant="success")
+            with Horizontal(id="equipment-btns"):
+                yield Button("+ Add Equipment", id="add-equipment", classes="equipment-btn", variant="success")
+                yield Button("- Remove Equipment", id="remove-equipment", classes="equipment-btn", variant="error", disabled=True)
             yield Label("Equipment List")
             yield ListView(id="equipment-container")
             yield Button("Create", id="create", variant="primary", disabled=True)
             yield Button("Cancel", id="cancel", variant="error")
     
     def on_mount(self) -> None:
-        self.query_one("#lookup", Button).can_focus = False
-
-    def add_equipment_row(self) -> None:
-        pass
+        not_focusable = ["#lookup", "#add-equipment", "#remove-equipment"]
+        for button in not_focusable:
+            self.query_one(button, Button).can_focus = False
 
     @on(Button.Pressed, "#add-equipment")
     def handle_add_equipment(self) -> None:
-        self.add_equipment_row()
+        eq_type = str(self.query_one("#eq-type", Select).value) # Cast to string just to make pylance happy
+        eq_model = self.query_one("#eq-model", Input).value 
+        eq_serial = self.query_one("#eq-serial", Input).value
+        eq_notes = self.query_one("#eq-notes", Input).value
+        if eq_type == "Select.BLANK" or not eq_model or not eq_serial:
+            self.app.push_screen(PopupScreen(f"Error: Equipment Type, Model, and Serial are required.", PopupType.ERROR))
+            return        
+        equipment = Equipment(eq_type, eq_model, eq_serial, eq_notes)
+        eq_list = self.query_one("#equipment-container", ListView)
+        item = ListItem(Label(f"{eq_type} ({eq_model} - {eq_serial})"))
+        item.equipment_object = equipment # type: ignore[attr-defined]
+        eq_list.append(item)
+        self.clear_equipment_fields()
+    
+    @on(Button.Pressed, "#remove-equipment")
+    def handle_remove_equipment(self) -> None:
+        eq_list = self.query_one("#equipment-container", ListView)
+        if eq_list.highlighted_child:
+            eq_list.highlighted_child.remove()
+            self.query_one("#remove-equipment", Button).disabled = True
+    
+    @on(ListView.Highlighted, "#equipment-container")
+    def enable_remove_equipment(self) -> None:
+        self.query_one("#remove-equipment", Button).disabled = False
+    
+    def clear_equipment_fields(self) -> None:
+        self.query_one("#eq-type", Select).clear()
+        self.query_one("#eq-model", Input).clear()
+        self.query_one("#eq-serial", Input).clear()
+        self.query_one("#eq-notes", Input).clear()
     
     @on(Input.Changed)
     def check_valid(self) -> None:
         # Email and Address are not required
         if (self.query_one("#code-input", Input).value and 
             self.query_one("#name-input", Input).value and 
-            self.query_one("#phone-input", Input).value):
+            self.query_one("#phone-input", Input).value and
+            self.query_one("#problem-input", TextArea).text):
             self.query_one("#create", Button).disabled = False
         else:
             self.query_one("#create", Button).disabled = True
     
     @on(Button.Pressed, "#create")
-    def create_customer(self):
+    def create_ticket(self):
         code = self.query_one("#code-input", Input).value
+        cust_id = self.app.manager.customers.get_customer_id(code)
+        if not cust_id:
+            self.app.push_screen(PopupScreen(f"Error: Customer not found", PopupType.ERROR))
+        priority = self.query_one("#priority-select", Select).value
         name = self.query_one("#name-input", Input).value
         phone = self.query_one("#phone-input", Input).value
-        email = self.query_one("#email-input", Input).value
-        address = self.query_one("#address-input", Input).value
-        is_business = self.query_one("#is_business", Checkbox).value
+        current_tech = self.app.current_technician.username # type: ignore[attr-defined]
+        problem = self.query_one("#problem-input", TextArea).text
+        equipment_list_objects = [] # List of Equipment objects
+        eq_list = self.query_one("#equipment-container", ListView) # ListView of Equipment
+        for item in eq_list.children:
+            equipment_list_objects.append(item.equipment_object) # type: ignore[attr-defined]
+
+        if not cust_id:
+            self.app.push_screen(PopupScreen(f"Error: Customer not found", PopupType.ERROR))
+        
         try:
-            self.app.manager.customers.create_customer(code, name, phone, email, address, is_business)
-            self.app.push_screen(PopupScreen(f"Customer {name} created!", PopupType.SUCCESS))
+            # Manually putting in ticket type as inhouse for now until I figure out where to put it in the form
+            ticket = self.app.manager.tickets.create_ticket(cust_id, # type: ignore[attr-defined]
+                                                            "Inhouse", 
+                                                            priority, # type: ignore[attr-defined]
+                                                            problem, 
+                                                            equipment_list_objects, 
+                                                            current_tech, 
+                                                            name, 
+                                                            phone) 
+            self.app.push_screen(PopupScreen(f"Ticket {ticket} created!", PopupType.SUCCESS))
         except Exception as e:
             self.app.push_screen(PopupScreen(f"Error: {e}", PopupType.ERROR))
         
