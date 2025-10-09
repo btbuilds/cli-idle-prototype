@@ -3,6 +3,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widget import Widget
 from textual.widgets import Button
+from panels.popup import PopupScreen, PopupType
 
 class Sidebar(Widget):
     def compose(self) -> ComposeResult:
@@ -15,6 +16,9 @@ class Sidebar(Widget):
     
     @on(Button.Pressed, "#tickets")
     def push_tickets(self) -> None:
+        if not self.app.current_technician: # type: ignore[attr-defined]
+            self.app.push_screen(PopupScreen(f"Error: Must be logged in.", PopupType.ERROR))
+            return
         from panels.ticket import TicketScreen # Import here to avoid circular import issue.
         # Comment on next line ignores pylance/vscode error since the code works
         self.screen.show_sidebar = False  # type: ignore[attr-defined]
@@ -22,6 +26,9 @@ class Sidebar(Widget):
     
     @on(Button.Pressed, "#customers")
     def push_customers(self) -> None:
+        if not self.app.current_technician: # type: ignore[attr-defined]
+            self.app.push_screen(PopupScreen(f"Error: Must be logged in.", PopupType.ERROR))
+            return
         from panels.customer import CustomerScreen # Import here to avoid circular import issue.
         # Comment on next line ignores pylance/vscode error since the code works
         self.screen.show_sidebar = False  # type: ignore[attr-defined]
@@ -36,6 +43,9 @@ class Sidebar(Widget):
     
     @on(Button.Pressed, "#technicians")
     def push_technicians(self) -> None:
+        if not self.app.current_technician: # type: ignore[attr-defined]
+            self.app.push_screen(PopupScreen(f"Error: Must be logged in.", PopupType.ERROR))
+            return
         from panels.technician import TechnicianScreen # Import here to avoid circular import issue.
         # Comment on next line ignores pylance/vscode error since the code works
         self.screen.show_sidebar = False  # type: ignore[attr-defined]
