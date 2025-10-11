@@ -27,12 +27,12 @@ class TicketScreen(BaseScreen):
     @on(Button.Pressed, "#edit")
     def edit_ticket(self):
         self.app.pop_screen()
-        self.app.push_screen(EditTicketScreen())
+        # self.app.push_screen(EditTicketScreen())
 
     @on(Button.Pressed, "#search")
     def search_tickets(self):
         self.app.pop_screen()
-        self.app.push_screen(SearchTicketScreen())
+        # self.app.push_screen(SearchTicketScreen())
 
 class NewTicketScreen(BaseScreen):
     BINDINGS = [("escape", "app.pop_screen", "Close screen")]
@@ -43,23 +43,32 @@ class NewTicketScreen(BaseScreen):
         with Vertical(id="new-ticket-content"):
             yield Label("New Ticket")
             yield Rule(line_style="heavy")
-            with Horizontal(classes="two-column"):
-                with Vertical():
+            with Horizontal(classes="three-column"): 
+                with Vertical(classes="col-50"):  # 50% width
                     yield Label("Customer Code")
                     with Horizontal():
                         yield Input(placeholder="Customer Code", id="code-input")
                         yield Button("Lookup", id="lookup", variant="primary")
-                with Vertical():
+                with Vertical(classes="col-25"):  # 25% width
                     yield Label("Priority")
                     yield Select(
-                    [("1 - High", "1"), 
-                    ("2", "2"), 
-                    ("3", "3"), 
-                    ("4", "4"),
-                    ("5 - Low", "5")],
-                    id="priority-select",
-                    prompt="Priority"
-                )
+                        [("1 - High", "1"),
+                        ("2", "2"),
+                        ("3", "3"),
+                        ("4", "4"),
+                        ("5 - Low", "5")],
+                        id="priority-select",
+                        prompt="Priority"
+                    )
+                with Vertical(classes="col-25"):  # 25% width
+                    yield Label("Ticket Type")
+                    yield Select(
+                        [("Inhouse", "inhouse"),
+                        ("Onsite", "onsite"),
+                        ("Remote", "remote")],
+                        id="ticket-type-select",
+                        prompt="Ticket Type"
+                    )
             with Horizontal(classes="two-column"):
                 with Vertical():
                     yield Label("Contact Name") # Maybe automatically populate this when a valid customer code is put in
@@ -129,48 +138,70 @@ class NewTicketScreen(BaseScreen):
         self.query_one("#eq-notes", Input).clear()
     
     @on(Input.Changed)
+    @on(TextArea.Changed)
     def check_valid(self) -> None:
-        # Email and Address are not required
-        if (self.query_one("#code-input", Input).value and 
-            self.query_one("#name-input", Input).value and 
-            self.query_one("#phone-input", Input).value and
-            self.query_one("#problem-input", TextArea).text):
+        if self.validate_ticket_form():
             self.query_one("#create", Button).disabled = False
         else:
             self.query_one("#create", Button).disabled = True
     
     @on(Button.Pressed, "#create")
     def create_ticket(self):
+        is_valid = self.validate_ticket_form()
+        if not is_valid:
+            self.app.push_screen(PopupScreen("Please fill out the entire form.", PopupType.ERROR))
+            return
+        
+        data = self.gather_form_data()
+        if data:
+            try:
+                ticket = self.app.manager.tickets.create_ticket(**data)
+                self.app.push_screen(PopupScreen(f"Ticket {ticket} created!", PopupType.SUCCESS))
+            except Exception as e:
+                self.app.push_screen(PopupScreen(f"Error: {e}", PopupType.ERROR))
+
+    def validate_ticket_form(self) -> bool:
+        """
+        Validate form data.
+        """
+        priority_valid = self.query_one("#priority-select", Select).value != "Select.BLANK"
+        ticket_type_valid = self.query_one("#ticket-type-select", Select).value != "Select.BLANK"
+        if (self.query_one("#code-input", Input).value and 
+            self.query_one("#name-input", Input).value and 
+            self.query_one("#phone-input", Input).value and
+            self.query_one("#problem-input", TextArea).text and
+            priority_valid and
+            ticket_type_valid):
+            return True
+        else:
+            return False
+    
+    def gather_form_data(self) -> dict:
+        """Extract all form data into a dict"""
         code = self.query_one("#code-input", Input).value
-        cust_id = self.app.manager.customers.get_customer_id(code)
-        if not cust_id:
-            self.app.push_screen(PopupScreen(f"Error: Customer not found", PopupType.ERROR))
+        customer_id = self.app.manager.customers.get_customer_id(code)
+        if not customer_id:
+            self.app.push_screen(PopupScreen(f"Error: Customer not found.", PopupType.ERROR))
+            return {}
         priority = self.query_one("#priority-select", Select).value
+        ticket_type = self.query_one("#ticket-type-select", Select).value
         name = self.query_one("#name-input", Input).value
         phone = self.query_one("#phone-input", Input).value
         current_tech = self.app.current_technician.username # type: ignore[attr-defined]
-        problem = self.query_one("#problem-input", TextArea).text
+        description = self.query_one("#problem-input", TextArea).text
         equipment_list_objects = [] # List of Equipment objects
         eq_list = self.query_one("#equipment-container", ListView) # ListView of Equipment
         for item in eq_list.children:
             equipment_list_objects.append(item.equipment_object) # type: ignore[attr-defined]
-
-        if not cust_id:
-            self.app.push_screen(PopupScreen(f"Error: Customer not found", PopupType.ERROR))
-        
-        try:
-            # Manually putting in ticket type as inhouse for now until I figure out where to put it in the form
-            ticket = self.app.manager.tickets.create_ticket(cust_id, # type: ignore[attr-defined]
-                                                            "Inhouse", 
-                                                            priority, # type: ignore[attr-defined]
-                                                            problem, 
-                                                            equipment_list_objects, 
-                                                            current_tech, 
-                                                            name, 
-                                                            phone) 
-            self.app.push_screen(PopupScreen(f"Ticket {ticket} created!", PopupType.SUCCESS))
-        except Exception as e:
-            self.app.push_screen(PopupScreen(f"Error: {e}", PopupType.ERROR))
+        data = {"customer_id":customer_id,
+                "ticket_type":ticket_type,
+                "priority":priority,
+                "description":description,
+                "equipment_list":equipment_list_objects,
+                "created_by":current_tech,
+                "contact_name":name,
+                "contact_phone":phone}
+        return data
         
 
     @on(Button.Pressed, "#cancel")

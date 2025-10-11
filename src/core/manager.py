@@ -131,6 +131,14 @@ class TicketManager:
                       created_by: str, 
                       contact_name: Optional[str] = "", 
                       contact_phone: Optional[str] = ""):
+        customer_dicts = load_data("customers")
+        valid_id = False
+        for customer_dict in customer_dicts:
+            if customer_dict["id"] == customer_id:
+                valid_id = True
+                break
+        if not valid_id:
+            raise ValueError("Customer ID not found.")
         ticket_dicts = load_data("tickets")
         ticket_number = self.get_next_ticket_number()
         prio_int = int(priority)
